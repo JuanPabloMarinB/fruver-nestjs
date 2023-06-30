@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Producto } from '../entities/producto.entity';
 import { NombreInvalidoException } from '../exceptions/product/NombreInvalidoException';
@@ -15,6 +14,10 @@ export class ProductService {
     @InjectRepository(Producto)
     private productoRepository: Repository<Producto>,
   ) {}
+
+  async getProducts() {
+    return this.productoRepository.find();
+  }
 
   async crearProducto(producto: CrearProductoDto) {
     try {
@@ -37,7 +40,7 @@ export class ProductService {
   async update(id: number, producto: Producto): Promise<void> {
     await this.productoRepository.update(id, producto);
   }
-  
+
   async create(producto: Producto): Promise<Producto> {
     return this.productoRepository.save(producto);
   }
@@ -50,8 +53,12 @@ export class ProductService {
     return this.productoRepository.save(producto);
   }
 
-  async registrar(nombre: string, precio: number, cantidad: number, fechaInventario: Date): Promise<void> {
-    
+  async registrar(
+    nombre: string,
+    precio: number,
+    cantidad: number,
+    fechaInventario: Date,
+  ): Promise<void> {
     this.validar(nombre, precio, cantidad, fechaInventario);
 
     const producto = new Producto();
@@ -63,7 +70,12 @@ export class ProductService {
     await this.productoRepository.save(producto);
   }
 
-  private validar(nombre: string, precio: number, cantidad: number, fechaInventario: Date): void {
+  private validar(
+    nombre: string,
+    precio: number,
+    cantidad: number,
+    fechaInventario: Date,
+  ): void {
     if (!nombre || nombre.trim() === '') {
       throw new NombreInvalidoException();
     }
@@ -73,21 +85,31 @@ export class ProductService {
     if (isNaN(cantidad) || cantidad <= 0) {
       throw new CantidadInvalidoException();
     }
-    if (!(fechaInventario instanceof Date) || isNaN(fechaInventario.getTime())) {
+    if (
+      !(fechaInventario instanceof Date) ||
+      isNaN(fechaInventario.getTime())
+    ) {
       throw new FechaInvalidoException();
     }
   }
 
-  async registrarVenta(producto: string, cantidadVendida: number): Promise<void> {
-    const productoExistente = await this.productoRepository.findOne({ where: { nombre: producto } });
-  
+  async registrarVenta(
+    producto: string,
+    cantidadVendida: number,
+  ): Promise<void> {
+    const productoExistente = await this.productoRepository.findOne({
+      where: { nombre: producto },
+    });
+
     if (productoExistente) {
       const cantidadDisponible = productoExistente.cantidadVenta;
-  
+
       if (cantidadVendida <= cantidadDisponible) {
         productoExistente.cantidadVenta = cantidadDisponible - cantidadVendida;
         await this.productoRepository.save(productoExistente);
-        console.log('Venta registrada correctamente. Actualización del inventario realizada.');
+        console.log(
+          'Venta registrada correctamente. Actualización del inventario realizada.',
+        );
       } else {
         console.log('No hay suficiente cantidad de producto en el inventario.');
       }

@@ -17,8 +17,8 @@ export class productController {
   constructor(private readonly productoService: ProductService) {}
 
   @Get()
-  async getAllProducts(): Promise<Producto[]> {
-    const products = await this.productoService.findAll();
+  async getProducts() {
+    const products = await this.productoService.getProducts();
     return products;
   }
 
