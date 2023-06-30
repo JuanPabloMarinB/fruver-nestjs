@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+/*
 import { Producto } from './Producto';
-
+*/
 @Entity()
 export class Ventas {
   @PrimaryGeneratedColumn()
@@ -26,7 +33,7 @@ export class Ventas {
 
   @Column()
   ganancia: number;
-/*
+  /*
   @OneToMany(() => Producto, producto => producto.ventas)
   productos: Producto[];
   */
