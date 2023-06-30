@@ -8,16 +8,18 @@ import {
   Param,
   Res,
 } from '@nestjs/common';
-import { Producto } from '../entities/producto';
+import { Producto } from '../entities/producto.entity';
 import { ProductService } from '../services/ProductService';
+import { CrearProductoDto } from 'src/entities/dto/producto.dto';
 
 @Controller('producto')
 export class productController {
   constructor(private readonly productoService: ProductService) {}
 
   @Get()
-  getAllProductos(): Promise<Producto[]> {
-    return this.productoService.findAll();
+  async getAllProducts(): Promise<Producto[]> {
+    const products = await this.productoService.findAll();
+    return products;
   }
 
   @Get(':id')
@@ -26,6 +28,11 @@ export class productController {
   }
 
   @Post('crear')
+  async crearProducto(@Body() newProducto: CrearProductoDto) {
+    return this.productoService.crearProducto(newProducto);
+  }
+
+  @Post('create')
   createProducto(@Body() producto: Producto): Promise<Producto> {
     return this.productoService.create(producto);
   }

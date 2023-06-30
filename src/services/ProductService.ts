@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions } from 'typeorm';
 import { Repository } from 'typeorm';
-import { Producto } from '../entities/producto';
+import { Producto } from '../entities/producto.entity';
 import { NombreInvalidoException } from '../exceptions/product/NombreInvalidoException';
 import { PrecioInvalidoException } from '../exceptions/product/PrecioInvalidoException';
 import { CantidadInvalidoException } from '../exceptions/product/CantidadInvalidoException';
 import { FechaInvalidoException } from '../exceptions/product/FechaInvalidoException';
+import { CrearProductoDto } from 'src/entities/dto/producto.dto';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +15,16 @@ export class ProductService {
     @InjectRepository(Producto)
     private productoRepository: Repository<Producto>,
   ) {}
+
+  async crearProducto(producto: CrearProductoDto) {
+    try {
+      const newProducto = this.productoRepository.create(producto);
+      return this.productoRepository.save(newProducto);
+    } catch (error) {
+      console.error('Error al crear el producto:', error);
+      throw error; // Lanza el error para que sea manejado en otro lugar si es necesario
+    }
+  }
 
   async findAll(): Promise<Producto[]> {
     return this.productoRepository.find();

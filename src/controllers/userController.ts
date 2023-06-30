@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { JwtAuthGuard } from '../modules/jwt-auth.guard';
-import { Usuario } from '../entities/usuario';
+import { Usuario } from '../entities/usuario.entity';
 import { UserService } from '../services/UserService';
 import { NombreInvalidoException } from '../exceptions/user/NombreInvalidoException';
 import { ApellidoInvalidoException } from '../exceptions/user/ApellidoInvalidoException';

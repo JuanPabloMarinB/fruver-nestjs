@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Usuario } from '../entities/usuario';
+import { Usuario } from '../entities/usuario.entity';
 import * as bcrypt from 'bcrypt';
 import { NombreInvalidoException } from '../exceptions/user/NombreInvalidoException';
 import { ApellidoInvalidoException } from '../exceptions/user/ApellidoInvalidoException';
